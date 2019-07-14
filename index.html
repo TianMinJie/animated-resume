@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" type="text/css" href="prism.css">
+	<link rel="stylesheet" type="text/css" href="default.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<style id="styleTag"></style>
+</head>
+<body>
+	<!--pre标签支持换行-->
+	
+<!-- particles.js container -->
+   <div id="particles-js">
+    <pre id="code"></pre>
+   </div>
+	
+
+<!-- scripts -->
+    <script src="./particles.js"></script>
+    <script src="js/app.js"></script>
+<!-- stats.js -->
+    <script src="js/lib/stats.js"></script>
+
+	<!--prism.js代码高亮时需要这个库-->
+	<script src="prism.js"></script>
+	<!--marked.js将markdown转化为html格式-->
+    <script src="marked.js"></script>
+
+    <script type="text/javascript">
+    	//选出要操作的这两个标签
+    	var codeDom = document.getElementById('code')
+    	var styleTag = document.getElementById('styleTag')
+    	var res1=`/*
+        *最近新get到了一个做简历的方式
+        *这马上就动手做了一份动态简历
+        *快和我一起学习吧
+
+    	*/
+
+    	/*来加点默认的样式吧*/
+    	/* 首先给所有元素加上过渡效果 */
+		* {
+		  transition: all .3s;
+		}
+		/* 白色背景太单调了，我们来点背景 */
+		html {
+		  color: rgb(222,222,222); 
+
+		  
+		}
+		/* 文字离边框太近了 */
+		#code {
+		  padding: .5em;
+		  border: 1px solid;
+		  margin: .5em;
+		  overflow: auto;
+		  width: 500px; height: 600px;
+		}
+		/* 代码高亮 */
+		.token.selector{ color: rgb(133,153,0); }
+		.token.property{ color: rgb(187,137,0); }
+		.token.punctuation{ color: yellow; }
+		.token.function{ color: rgb(42,161,152); }
+
+		/* 加点 3D 效果 */
+		html{
+		  perspective: 1000px;
+		}
+		#code {
+		  position: fixed; left: 0; top: 0;
+		  -webkit-transition: none;
+		  transition: none;
+		  -webkit-transform: rotateY(10deg) translateZ(-100px) ;
+		          transform: rotateY(10deg) translateZ(-100px) ;
+		}
+
+		/* 接下来我给自己准备一个编辑器 */
+		#paper{
+			position:fixed;
+			right: 30px;
+			width: 500px;
+			height: 600px;
+			background-color: white;
+			color: black;
+		}
+
+		canvas{
+			position: fixed;
+		}
+
+
+
+    	`
+
+    	var res2 = `
+        #paper{
+			border: 2px solid black;
+		}
+
+    	`
+
+    	var res3 = `
+        #paper{
+			padding: 30px;
+		}
+
+    	`
+
+    	var md = `
+    			谢同学
+----
+
+大三在校生、初级前端工程师、热爱编程技术。
+
+求职意向
+----
+web前端工程师
+
+技能
+----
+* 熟悉html、css、javascript
+* 熟练使用jquery等前端相关库
+* 熟悉vue全家桶
+* 对微信小程序有一定了解
+* 了解react
+* 了解node.js 、php等后台开发语言
+
+
+博客地址
+----
+
+1. [博客园](https://www.cnblogs.com/xxm980617/):https://www.cnblogs.com/xxm980617/
+2. [github](https://github.com/4561231):https://github.com/4561231
+
+
+ 希望大牛们多多指教。
+`
+      
+
+    	function writeCode(oldstring, newString, fn){
+    		  //开定时器，每10毫秒写一个字符
+	        let n = 0;
+	    	let id = setInterval(()=>{
+	    		n += 1
+
+                code.scrollTop = 10000
+	            //在页面上写样式
+	    		codeDom.innerHTML = Prism.highlight(oldstring+newString.substring(0,n), Prism.languages.css);
+	    		//将页面中的样式应用到标签中
+	    		styleTag.innerHTML = oldstring + newString.substring(0,n)
+	    		if(n>=newString.length){
+	    			clearInterval(id)
+	    			fn.call()
+
+	    		}
+	    	},10)
+    	}
+
+    	function createEle(fn){
+    		var paper = document.createElement('div')
+			paper.id = 'paper'
+			document.querySelector('#particles-js').appendChild(paper) 
+			var content = document.createElement('pre')
+			content.className='content'
+			paper.appendChild(content)
+		
+			fn.call()
+    	}
+
+    	//markdown格式的简历
+
+    	function writeMark(markdown, fn){
+		let domPaper = document.querySelector('#paper>pre')
+		let n = 0;
+		let id = setInterval(()=>{
+			n += 1
+			domPaper.innerHTML = markdown.substring(0, n)
+			domPaper.scrollTop = domPaper.scrollHeight
+			if(n >= markdown.length){
+				window.clearInterval(id)
+				fn.call()
+			}
+
+		})
+
+	}
+
+	function writeTohtml(md,fn){
+		var content = document.querySelector(".content");
+		console.log(content)
+		content.innerHTML = marked(md)
+		fn.call()
+	}
+
+
+    	writeCode('', res1, ()=>{
+    		createEle(()=>{
+    			writeCode(res1, res2,()=>{
+    				 writeMark(md, ()=>{
+    				 	writeTohtml(md)
+    				 })
+
+    			})
+    		})
+
+    	})
+
+
+    </script>
+	
+</body>
+</html>
